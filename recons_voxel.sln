@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recons_voxel", "recons_voxel\recons_voxel.vcxproj", "{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voxel_playback", "voxel_playback\voxel_playback.vcxproj", "{C1603111-D0DA-4C3D-97D8-1F42F25BFF00}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E} = {D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voxel_reconstruct", "voxel_reconstruct\voxel_reconstruct.vcxproj", "{2773E830-D329-47BB-B8B2-73B0426E549E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E} = {D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voxel_reconstruct_cube", "voxel_reconstruct_cube\voxel_reconstruct_cube.vcxproj", "{767178C4-7378-4AAE-9894-7708E63C2A2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E} = {D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}.Debug|Win32.Build.0 = Debug|Win32
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}.Release|Win32.ActiveCfg = Release|Win32
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}.Release|Win32.Build.0 = Release|Win32
+		{C1603111-D0DA-4C3D-97D8-1F42F25BFF00}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1603111-D0DA-4C3D-97D8-1F42F25BFF00}.Debug|Win32.Build.0 = Debug|Win32
+		{C1603111-D0DA-4C3D-97D8-1F42F25BFF00}.Release|Win32.ActiveCfg = Release|Win32
+		{C1603111-D0DA-4C3D-97D8-1F42F25BFF00}.Release|Win32.Build.0 = Release|Win32
+		{2773E830-D329-47BB-B8B2-73B0426E549E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2773E830-D329-47BB-B8B2-73B0426E549E}.Debug|Win32.Build.0 = Debug|Win32
+		{2773E830-D329-47BB-B8B2-73B0426E549E}.Release|Win32.ActiveCfg = Release|Win32
+		{2773E830-D329-47BB-B8B2-73B0426E549E}.Release|Win32.Build.0 = Release|Win32
+		{767178C4-7378-4AAE-9894-7708E63C2A2A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{767178C4-7378-4AAE-9894-7708E63C2A2A}.Debug|Win32.Build.0 = Debug|Win32
+		{767178C4-7378-4AAE-9894-7708E63C2A2A}.Release|Win32.ActiveCfg = Release|Win32
+		{767178C4-7378-4AAE-9894-7708E63C2A2A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

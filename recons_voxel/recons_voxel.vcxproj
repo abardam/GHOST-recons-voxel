@@ -63,11 +63,15 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "G:\Visual Studio 2013\recons_voxel\recons_voxel\*.h" "$(CODE_DIR)\ReconsVoxel-x86-vs12\include\"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy header files</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>mkdir "$(CODE_DIR)\ReconsVoxel-x86-vs12\include\" &amp; copy /y "$(ProjectDir)\*.h" "$(CODE_DIR)\ReconsVoxel-x86-vs12\include\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -83,11 +87,15 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "G:\Visual Studio 2013\recons_voxel\recons_voxel\*.h" "$(CODE_DIR)\ReconsVoxel-x86-vs12\include\"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy header files</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>mkdir "$(CODE_DIR)\ReconsVoxel-x86-vs12\include\" &amp; copy /y "$(ProjectDir)\*.h" "$(CODE_DIR)\ReconsVoxel-x86-vs12\include\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="recons_cylinder.cpp" />

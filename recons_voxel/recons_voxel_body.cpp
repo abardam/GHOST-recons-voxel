@@ -5,9 +5,9 @@
 
 cv::Mat get_voxel_transform(float width, float height, float depth, float voxel_size){
 	cv::Mat voxel_transform = cv::Mat::eye(4, 4, CV_32F);
-	voxel_transform.ptr<float>(0)[3] = -width / 2;
-	voxel_transform.ptr<float>(1)[3] = 0;
-	voxel_transform.ptr<float>(2)[3] = -depth/2;
+	voxel_transform.ptr<float>(0)[3] = -width / 2 - voxel_size/2;
+	voxel_transform.ptr<float>(1)[3] = 0 - voxel_size/2;
+	voxel_transform.ptr<float>(2)[3] = -depth/2 - voxel_size/2;
 	voxel_transform = cv::Mat::diag(cv::Mat(cv::Vec4f(voxel_size, voxel_size, voxel_size, 1))) * voxel_transform;
 	return voxel_transform;
 }
@@ -32,13 +32,29 @@ void init_voxel_set(
 
 
 		if (width_depth.first <= 0 || width_depth.second <= 0){
-			VoxelMatrix voxelSet_m(fittedCylinders[i].width * VOXEL_VOLUME_X_RATIO / voxel_size, length / voxel_size, fittedCylinders[i].height* VOXEL_VOLUME_Z_RATIO / voxel_size, true);
+			int w = fittedCylinders[i].width * VOXEL_VOLUME_X_RATIO / voxel_size;
+			int h = length / voxel_size;
+			int d = fittedCylinders[i].height* VOXEL_VOLUME_Z_RATIO / voxel_size;
+
+			if (w <= 0) w = 1;
+			if (h <= 0) h = 1;
+			if (d <= 0) d = 1;
+
+			VoxelMatrix voxelSet_m(w, h, d, true);
 
 			voxelSetVector.push_back(voxelSet_m);
 			map.insert(VoxelSetEntry(bpdv[i].mBodyPartName, voxelSetVector.size() - 1));
 		}
 		else{
-			VoxelMatrix voxelSet_m(width_depth.first / voxel_size, length / voxel_size, width_depth.second / voxel_size, true);
+			int w = width_depth.first / voxel_size;
+			int h = length / voxel_size;
+			int d = width_depth.second / voxel_size;
+
+			if (w <= 0) w = 1;
+			if (h <= 0) h = 1;
+			if (d <= 0) d = 1;
+
+			VoxelMatrix voxelSet_m(w, h, d, true);
 
 			voxelSetVector.push_back(voxelSet_m);
 			map.insert(VoxelSetEntry(bpdv[i].mBodyPartName, voxelSetVector.size() - 1));

@@ -46,7 +46,7 @@ std::vector<Grid3D<char>> assign_voxels_to_body_parts(
 		//first get the inverse of the body part transform
 		cv::Mat bp_transform_inv = bodypart_transforms[i].inv();
 
-		std::pair<float, float> radii(cylinderVector[i].width, cylinderVector[i].height);
+		RadiusSettings radii(cylinderVector[i].width, cylinderVector[i].height, 0);
 
 		const cv::Mat voxel_transform_inv = get_voxel_transform(volumeSet[i].width, volumeSet[i].height, volumeSet[i].depth, voxel_size).inv();
 

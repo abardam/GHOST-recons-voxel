@@ -3,10 +3,10 @@
 #include <AssimpOpenGL.h>
 #include <cv_pointmat_common.h>
 
-float dist_radius(const cv::Vec4f& point, const std::pair<float, float>& radius){
+float dist_radius(const cv::Vec4f& point, const RadiusSettings& radius){
 	float angle = atan2(point(2), point(0));
-	float x_t = radius.first * cos(angle);
-	float z_t = radius.second * sin(angle);
+	float x_t = radius.x * cos(angle);
+	float z_t = radius.z * sin(angle);
 	float dist_to_ellipse_sq = x_t * x_t + z_t * z_t;
 	float dist_to_pt_sq = point(0)*point(0) + point(2)*point(2);
 
@@ -20,15 +20,17 @@ bool filter_height_criteria(const cv::Vec4f& point, void* float_length){
 	return 0 <= l && l < *length;
 }
 
-bool filter_radius_criteria(const cv::Vec4f& point, void* pair_float_radius){
-	std::pair<float, float> * radius = (std::pair<float, float>*)pair_float_radius;
+bool filter_radius_criteria(const cv::Vec4f& point, void* radius_settings_float_radius){
+	RadiusSettings * radius = (RadiusSettings*)radius_settings_float_radius;
 	
-	return dist_radius(point, *radius) < CYLINDER_FITTING_THRESHOLD_SQ;
+	return dist_radius(point, *radius) < radius->threshold_squared;
 }
 
 void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHardMap& snhMap, const cv::Mat& pointCloud, const cv::Mat& camera_pose, std::vector<Cylinder>& cylinderVector,
+	float radius_search_increment, float radius_search_max, float radius_threshold,
 	const cv::Mat * DEBUG_camera_matrix, float * DEBUG_width, float * DEBUG_height){
 	bool debug = DEBUG_width != 0 && DEBUG_height != 0 && DEBUG_camera_matrix != 0;
+	float radius_threshold_squared = radius_threshold * radius_threshold;
 
 	{
 
@@ -63,14 +65,14 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHa
 
 			//expand dong
 			{
-				float bestrad_x = 0;
-				float bestrad_z = 0;
+				float bestrad_x = radius_search_increment;
+				float bestrad_z = radius_search_increment;
 				int bestradpts = 0;
-				for (float radz = CYLINDER_FITTING_RADIUS_SEARCH_INCREMENT; radz <= CYLINDER_FITTING_RADIUS_SEARCH_MAX; radz += CYLINDER_FITTING_RADIUS_SEARCH_INCREMENT)
+				for (float radz = radius_search_increment; radz <= radius_search_max; radz += radius_search_increment)
 				{
-					for (float radx = radz; radx <= CYLINDER_FITTING_RADIUS_SEARCH_MAX; radx += CYLINDER_FITTING_RADIUS_SEARCH_INCREMENT)
+					for (float radx = radz; radx <= radius_search_max; radx += radius_search_increment)
 					{
-						std::pair<float, float> rads(radx, radz);
+						RadiusSettings rads(radx, radz, radius_threshold_squared);
 						cv::Mat pc_bpcs_fit = filter_pointmat(pc_bpcs_filter, filter_radius_criteria, &rads);
 
 

@@ -110,6 +110,10 @@ int main(int argc, char * argv[]){
 		return 0;
 	}
 
+	float cylinder_fitting_threshold = 0.4;
+	float cylinder_fitting_max = 2;
+	float cylinder_fitting_increment = 0.1;
+
 	std::string video_directory(argv[1]);
 	int i = 0;
 	std::stringstream filenameSS;
@@ -224,7 +228,7 @@ int main(int argc, char * argv[]){
 			cv::Mat pointCloud(4, pointMap.mvPointLocations.size(), CV_32F);
 			read_points_pointcloud(pointMap, pointCloud);
 
-			cylinder_fitting(bpdv, snhMap, pointCloud, camera_extrinsic, cylinderVector);//, &camera_intrinsic, &win_width, &win_height);
+			cylinder_fitting(bpdv, snhMap, pointCloud, camera_extrinsic, cylinderVector, cylinder_fitting_increment, cylinder_fitting_max, cylinder_fitting_threshold);//, &camera_intrinsic, &win_width, &win_height);
 
 			init_voxel_set(bpdv, snhMap, cylinderVector, camera_extrinsic, voxelSet, volume_sizes, vsMap, voxel_size);
 

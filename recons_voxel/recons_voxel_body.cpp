@@ -18,37 +18,34 @@ void init_voxel_set(
 	const std::vector<Cylinder>& fittedCylinders,
 	const cv::Mat& external_parameters,
 	std::vector<VoxelMatrix>& voxelSetVector,
-	const std::vector<std::pair<float, float>>& volume_sizes,
+	const std::vector<VolumeDimensions>& volume_sizes,
 	VoxelSetMap& map,
 	float voxel_size){
 
 	for (int i = 0; i < bpdv.size(); ++i){
-
-		float length;
 		
-		get_bodypart_transform(bpdv[i], snhMap, &external_parameters, &length);
-
-		const std::pair<int, int> width_depth = volume_sizes[i];
+		get_bodypart_transform(bpdv[i], snhMap, external_parameters);
 
 
-		if (width_depth.first <= 0 || width_depth.second <= 0){
-			int w = fittedCylinders[i].width * VOXEL_VOLUME_X_RATIO / voxel_size;
-			int h = length / voxel_size;
-			int d = fittedCylinders[i].height* VOXEL_VOLUME_Z_RATIO / voxel_size;
-
-			if (w <= 0) w = 1;
-			if (h <= 0) h = 1;
-			if (d <= 0) d = 1;
-
-			VoxelMatrix voxelSet_m(w, h, d, true);
-
-			voxelSetVector.push_back(voxelSet_m);
-			map.insert(VoxelSetEntry(bpdv[i].mBodyPartName, voxelSetVector.size() - 1));
+		if (volume_sizes[i].width <= 0 || volume_sizes[i].depth <= 0 || volume_sizes[i].height <= 0){
+			std::cout << "error! init_voxel_set: volume_sizes has a 0 width/height/depth!\n";
+			//int w = fittedCylinders[i].width * VOXEL_VOLUME_X_RATIO / voxel_size;
+			//int h = length / voxel_size;
+			//int d = fittedCylinders[i].height* VOXEL_VOLUME_Z_RATIO / voxel_size;
+			//
+			//if (w <= 0) w = 1;
+			//if (h <= 0) h = 1;
+			//if (d <= 0) d = 1;
+			//
+			//VoxelMatrix voxelSet_m(w, h, d, true);
+			//
+			//voxelSetVector.push_back(voxelSet_m);
+			//map.insert(VoxelSetEntry(bpdv[i].mBodyPartName, voxelSetVector.size() - 1));
 		}
-		else{
-			int w = width_depth.first / voxel_size;
-			int h = length / voxel_size;
-			int d = width_depth.second / voxel_size;
+		{
+			int w = volume_sizes[i].width / voxel_size;
+			int h = volume_sizes[i].height / voxel_size;
+			int d = volume_sizes[i].depth / voxel_size;
 
 			if (w <= 0) w = 1;
 			if (h <= 0) h = 1;
@@ -57,7 +54,8 @@ void init_voxel_set(
 			VoxelMatrix voxelSet_m(w, h, d, true);
 
 			voxelSetVector.push_back(voxelSet_m);
-			map.insert(VoxelSetEntry(bpdv[i].mBodyPartName, voxelSetVector.size() - 1));
+			VoxelSetEntry vse(bpdv[i].mBodyPartName, voxelSetVector.size() - 1);
+			map.insert(vse);
 
 		}
 	}

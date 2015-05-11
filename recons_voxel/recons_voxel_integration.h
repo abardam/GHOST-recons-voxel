@@ -6,6 +6,7 @@
 #include "recons_cylinder.h"
 
 //integrate volume with the entire voxel set
+//depth multiplier should be -1 if depth is negative
 void integrate_volume(
 	const cv::Mat& bodypart_transform,
 	const Grid3D<char> voxel_assignment,
@@ -18,7 +19,8 @@ void integrate_volume(
 	cv::Mat& TSDF,
 	cv::Mat& TSDF_weight,
 	float voxel_size,
-	float TSDF_MU);
+	float TSDF_MU,
+	int depth_multiplier);
 
 //if voxelAssignments[i][x][y][z] is 1, the voxel in body part volume i coord x,y,z belongs to i;
 //if 2, it belongs to another part;

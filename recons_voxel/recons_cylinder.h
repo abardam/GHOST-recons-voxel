@@ -1,6 +1,7 @@
 #pragma once
 
 #include <AssimpOpenGL.h>
+#include "recons_voxel.h"
 
 //synthetic data
 //#define CYLINDER_FITTING_THRESHOLD_SQ 0.16
@@ -39,7 +40,7 @@ struct RadiusSettings{
 };
 
 void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHardMap& snhMap, const cv::Mat& pointCloud, const cv::Mat& camera_pose, std::vector<Cylinder>& cylinderVector,
-	float radius_search_increment, float radius_search_max, float radius_threshold,
+	float radius_search_increment, float radius_search_max, float radius_threshold, const std::vector<VolumeDimensions> * volume_dimensions=0,
 	const cv::Mat * DEBUG_camera_matrix=0, float * DEBUG_width=0, float * DEBUG_height=0);
 
 float dist_radius(const cv::Vec4f& point, const RadiusSettings& radius);

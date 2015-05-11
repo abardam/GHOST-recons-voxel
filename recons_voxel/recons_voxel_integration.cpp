@@ -350,7 +350,8 @@ void integrate_volume
 	cv::Mat& TSDF,
 	cv::Mat& TSDF_weight,
 	float voxel_size,
-	float TSDF_MU){
+	float TSDF_MU,
+	int depth_multiplier){
 
 
 	cv::Mat translation = camera_pose(cv::Range(0, 4), cv::Range(3, 4));
@@ -411,7 +412,9 @@ void integrate_volume
 			cv::Mat repro_depth_pt = cv::Mat::diag(cv::Mat(cv::Vec4f(depth_val, depth_val, depth_val, 1))) * camera_matrix_inv * depth_pt;
 
 
-			float eta = lambda - cv::norm(repro_depth_pt);
+			float eta = (depth_multiplier) * (cv::norm(repro_depth_pt) - lambda); //depth multiplier is negative if depth is negative
+
+			if (depth_val == 0) eta = TSDF_MU+1; //handles "infinite" depth (i.e. in synthetic data)
 
 
 			float abs_eta = abs(eta);

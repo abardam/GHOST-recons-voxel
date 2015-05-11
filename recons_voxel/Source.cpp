@@ -91,7 +91,7 @@ void display_points_and_volumes(
 			//voxel_draw_volume(image, bpdv[i], snhMap, camera_pose, camera_matrix, voxels[i]);
 			const VoxelMatrix * vs_m = &(voxels[i]);
 
-			cv::Mat voxelPC = temp_rot * get_bodypart_transform(bpdv[i], snhMap) * get_voxel_transform(vs_m->width, vs_m->height, vs_m->depth, voxel_size) * vs_m->voxel_coords;
+			cv::Mat voxelPC = temp_rot * get_bodypart_transform(bpdv[i], snhMap, camera_pose) * get_voxel_transform(vs_m->width, vs_m->height, vs_m->depth, voxel_size) * vs_m->voxel_coords;
 			cv::Vec3b color(bpdv[i].mColor[0]*255,
 				bpdv[i].mColor[1]*255,
 				bpdv[i].mColor[2]*255);
@@ -153,20 +153,20 @@ int main(int argc, char * argv[]){
 	cv::Mat camera_1;
 
 	//experimental
-	std::vector<std::pair<float, float>> volume_sizes;
-	volume_sizes.push_back(std::pair<float, float>(3, 3));
-	volume_sizes.push_back(std::pair<float, float>(6, 6));
-	volume_sizes.push_back(std::pair<float, float>(5, 5));
-	volume_sizes.push_back(std::pair<float, float>(2.5, 2.5));
-	volume_sizes.push_back(std::pair<float, float>(2.5, 2.5));
-	volume_sizes.push_back(std::pair<float, float>(2, 2));
-	volume_sizes.push_back(std::pair<float, float>(2, 2));
-	volume_sizes.push_back(std::pair<float, float>(4, 2));
-	volume_sizes.push_back(std::pair<float, float>(4, 2));
-	volume_sizes.push_back(std::pair<float, float>(3, 3));
-	volume_sizes.push_back(std::pair<float, float>(3, 3));
-	volume_sizes.push_back(std::pair<float, float>(2, 2));
-	volume_sizes.push_back(std::pair<float, float>(2, 2));
+	//std::vector<std::pair<float, float>> volume_sizes;
+	//volume_sizes.push_back(std::pair<float, float>(3, 3));
+	//volume_sizes.push_back(std::pair<float, float>(6, 6));
+	//volume_sizes.push_back(std::pair<float, float>(5, 5));
+	//volume_sizes.push_back(std::pair<float, float>(2.5, 2.5));
+	//volume_sizes.push_back(std::pair<float, float>(2.5, 2.5));
+	//volume_sizes.push_back(std::pair<float, float>(2, 2));
+	//volume_sizes.push_back(std::pair<float, float>(2, 2));
+	//volume_sizes.push_back(std::pair<float, float>(4, 2));
+	//volume_sizes.push_back(std::pair<float, float>(4, 2));
+	//volume_sizes.push_back(std::pair<float, float>(3, 3));
+	//volume_sizes.push_back(std::pair<float, float>(3, 3));
+	//volume_sizes.push_back(std::pair<float, float>(2, 2));
+	//volume_sizes.push_back(std::pair<float, float>(2, 2));
 
 	while (true){
 		filenameSS.str("");
@@ -218,7 +218,7 @@ int main(int argc, char * argv[]){
 			camera_1 = camera_extrinsic.clone();
 
 			gen_root = root;
-			cv_draw_and_build_skeleton(&gen_root, camera_extrinsic, camera_intrinsic, &snhMap);
+			cv_draw_and_build_skeleton(&gen_root, cv::Mat::eye(4,4,CV_32F), camera_intrinsic, camera_extrinsic, &snhMap);
 			voxelSet.clear();
 			vsMap.clear();
 

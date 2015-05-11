@@ -12,6 +12,11 @@ unsigned int get_voxel_index(int x, int y, int z, int width, int height, int dep
 template <typename T>
 using Grid3D = std::vector < std::vector <std::vector<T>> > ;
 
+struct VolumeDimensions{
+	float width, height, depth;
+	VolumeDimensions(float w, float h, float d) :
+		width(w), height(h), depth(d){};
+};
 
 struct Voxel{
 	cv::Vec3b color;

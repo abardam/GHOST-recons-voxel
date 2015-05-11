@@ -60,7 +60,7 @@ int main(int argc, char** argv){
 			bp_transform.ptr<float>(1)[3] = -volume_height/2;
 			bp_transform = currentTransform * bp_transform;
 
-			integrate_volume(bp_transform, voxel_assignment, frame_datas[frame].mmDepth, currentTransform, currentTransform.inv(), frame_datas[frame].mmCameraMatrix, frame_datas[frame].mmCameraMatrix.inv(), cube_volume, TSDF, TSDF_weight, voxel_size, voxel_size);
+			integrate_volume(bp_transform, voxel_assignment, frame_datas[frame].mmDepth, currentTransform, currentTransform.inv(), frame_datas[frame].mmCameraMatrix, frame_datas[frame].mmCameraMatrix.inv(), cube_volume, TSDF, TSDF_weight, voxel_size, voxel_size, -1);
 
 
 			cv::Mat im = frame_datas[frame].mmColor.clone();

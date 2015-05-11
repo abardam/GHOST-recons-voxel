@@ -28,6 +28,7 @@ bool filter_radius_criteria(const cv::Vec4f& point, void* radius_settings_float_
 
 void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHardMap& snhMap, const cv::Mat& pointCloud, const cv::Mat& camera_pose, std::vector<Cylinder>& cylinderVector,
 	float radius_search_increment, float radius_search_max, float radius_threshold,
+	const std::vector<VolumeDimensions> * volume_dimensions,
 	const cv::Mat * DEBUG_camera_matrix, float * DEBUG_width, float * DEBUG_height){
 	bool debug = DEBUG_width != 0 && DEBUG_height != 0 && DEBUG_camera_matrix != 0;
 	float radius_threshold_squared = radius_threshold * radius_threshold;
@@ -51,7 +52,16 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHa
 		for (int i = 0; i < bpdv.size(); ++i){
 			float length;
 			//first get the inverse of the body part transform
-			cv::Mat bp_transform = get_bodypart_transform(bpdv[i], snhMap, &camera_pose, &length);
+			cv::Mat bp_transform;
+			
+			if (volume_dimensions){
+				bp_transform = get_bodypart_transform(bpdv[i], snhMap, camera_pose);
+				length = (*volume_dimensions)[i].height;
+			}
+			else{
+				bp_transform = get_bodypart_transform(bpdv[i], snhMap, camera_pose, &length);
+			}
+
 			cv::Mat bp_transform_inv = bp_transform.inv();
 
 			//in order to transform the point cloud into the body part's coordinate system
@@ -86,7 +96,7 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHa
 								cv::Mat assigned_pts_im = test_.clone();
 
 
-								cv::Mat projected = *DEBUG_camera_matrix * get_bodypart_transform(bpdv[i], snhMap, &camera_pose, &length) * pc_bpcs_fit;
+								cv::Mat projected = *DEBUG_camera_matrix * get_bodypart_transform(bpdv[i], snhMap, camera_pose) * pc_bpcs_fit;
 								divide_pointmat_by_z(projected);
 								draw_pointmat_on_image(assigned_pts_im, projected, cv::Vec3b(0xff, 0x55, 0));
 								cv::imshow(bpdv[i].mBodyPartName, assigned_pts_im);
@@ -97,7 +107,7 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHa
 						//debug
 						if (!pc_bpcs_fit.empty() && debug){
 							cv::Mat test = test_.clone();
-							cv::Mat projected = *DEBUG_camera_matrix * get_bodypart_transform(bpdv[i], snhMap, &camera_pose, &length) * pc_bpcs_fit;
+							cv::Mat projected = *DEBUG_camera_matrix * get_bodypart_transform(bpdv[i], snhMap, camera_pose) * pc_bpcs_fit;
 							divide_pointmat_by_z(projected);
 							draw_pointmat_on_image(test, projected, cv::Vec3b(0xff, 0x55, 0));
 

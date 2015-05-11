@@ -18,7 +18,7 @@ void init_voxel_set(
 	const std::vector<Cylinder>& fittedCylinders,
 	const cv::Mat& external_parameters,
 	std::vector<VoxelMatrix>& voxelSetVector,
-	const std::vector<std::pair<float, float>>& volume_sizes,
+	const std::vector<VolumeDimensions>& volume_sizes,
 	VoxelSetMap& map,
 	float voxel_size);
 

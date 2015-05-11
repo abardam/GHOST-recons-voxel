@@ -16,9 +16,9 @@ SkeletonNodeHard generateFromReference(const SkeletonNodeHard * const ref, const
 
 	//extract scale and correct it?
 	cv::Vec3f scale(
-		1 / cv::norm(snh.mTransformation(cv::Range(0, 1), cv::Range(0, 3))),
-		1 / cv::norm(snh.mTransformation(cv::Range(1, 2), cv::Range(0, 3))),
-		1 / cv::norm(snh.mTransformation(cv::Range(2, 3), cv::Range(0, 3)))
+		cv::norm(prev->mTransformation(cv::Range(0, 1), cv::Range(0, 3))) / cv::norm(snh.mTransformation(cv::Range(0, 1), cv::Range(0, 3))),
+		cv::norm(prev->mTransformation(cv::Range(1, 2), cv::Range(0, 3))) / cv::norm(snh.mTransformation(cv::Range(1, 2), cv::Range(0, 3))),
+		cv::norm(prev->mTransformation(cv::Range(2, 3), cv::Range(0, 3))) / cv::norm(snh.mTransformation(cv::Range(2, 3), cv::Range(0, 3)))
 		);
 
 	cv::Mat rot = cv::Mat::diag(cv::Mat(scale)) * snh.mTransformation(cv::Range(0, 3), cv::Range(0, 3));
@@ -106,12 +106,12 @@ int main(int argc, char * argv[]){
 		}
 
 
-		cv_draw_and_build_skeleton(&gen_root, camera_extrinsic, camera_intrinsic, &snhMap);
+		cv_draw_and_build_skeleton(&gen_root, cv::Mat::eye(4,4,CV_32F), camera_intrinsic, camera_extrinsic, &snhMap, colorMat);
 
 		for (int i = 0; i < bpdv.size(); ++i){
 
 			cv::Vec3b color(bpdv[i].mColor[2] * 255, bpdv[i].mColor[1] * 255, bpdv[i].mColor[0] * 255);
-			voxel_draw_volume(colorMat, color, get_bodypart_transform(bpdv[i], snhMap), camera_intrinsic, &voxels[i], voxel_size);
+			voxel_draw_volume(colorMat, color, get_bodypart_transform(bpdv[i], snhMap, camera_extrinsic), camera_intrinsic, &voxels[i], voxel_size);
 		}
 		snhMap.clear();
 		cv::imshow("color", colorMat);

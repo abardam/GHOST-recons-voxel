@@ -20,6 +20,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voxel_reconstruct_cube", "v
 		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E} = {D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voxel_to_mesh", "voxel_to_mesh\voxel_to_mesh.vcxproj", "{C96CE1A8-07AE-455B-87E4-0CB698E3D75C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D1535AB7-97EC-4F29-9C5F-A43CDA25A06E} = {D1535AB7-97EC-4F29-9C5F-A43CDA25A06E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -42,6 +47,10 @@ Global
 		{767178C4-7378-4AAE-9894-7708E63C2A2A}.Debug|Win32.Build.0 = Debug|Win32
 		{767178C4-7378-4AAE-9894-7708E63C2A2A}.Release|Win32.ActiveCfg = Release|Win32
 		{767178C4-7378-4AAE-9894-7708E63C2A2A}.Release|Win32.Build.0 = Release|Win32
+		{C96CE1A8-07AE-455B-87E4-0CB698E3D75C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C96CE1A8-07AE-455B-87E4-0CB698E3D75C}.Debug|Win32.Build.0 = Debug|Win32
+		{C96CE1A8-07AE-455B-87E4-0CB698E3D75C}.Release|Win32.ActiveCfg = Release|Win32
+		{C96CE1A8-07AE-455B-87E4-0CB698E3D75C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

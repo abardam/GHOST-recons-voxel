@@ -22,6 +22,18 @@ void init_voxel_set(
 	VoxelSetMap& map,
 	float voxel_size);
 
+
+//initializes a voxelset. make sure to call delete_voxel_set later! ABSOLUTE
+void init_voxel_set(
+	const BodyPartDefinitionVector& bpdv,
+	const SkeletonNodeAbsoluteVector& snav,
+	const std::vector<Cylinder>& fittedCylinders,
+	const cv::Mat& external_parameters,
+	std::vector<VoxelMatrix>& voxelSetVector,
+	const std::vector<VolumeDimensions>& volume_sizes,
+	VoxelSetMap& map,
+	float voxel_size);
+
 void delete_voxel_set(std::vector<VoxelSet *>& voxelSetVector);
 
 //draws the voxels in each voxelset

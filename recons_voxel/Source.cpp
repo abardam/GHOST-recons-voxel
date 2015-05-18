@@ -110,6 +110,8 @@ int main(int argc, char * argv[]){
 		return 0;
 	}
 
+
+
 	float cylinder_fitting_threshold = 0.4;
 	float cylinder_fitting_max = 2;
 	float cylinder_fitting_increment = 0.1;
@@ -118,6 +120,18 @@ int main(int argc, char * argv[]){
 	int i = 0;
 	std::stringstream filenameSS;
 	cv::FileStorage fs;
+
+
+	std::vector<VolumeDimensions> volume_sizes;
+	for (auto it = fs["customvolumes"].begin();
+		it != fs["customvolumes"].end();
+		++it){
+		VolumeDimensions vd(0, 0, 0);
+		(*it)["width"] >> vd.width;
+		(*it)["height"] >> vd.height;
+		(*it)["depth"] >> vd.depth;
+		volume_sizes.push_back(vd);
+	}
 
 	filenameSS << video_directory << "/bodypartdefinitions.xml.gz";
 
@@ -253,13 +267,13 @@ int main(int argc, char * argv[]){
 		//cv::Mat pointCloud(4, pointMap.mvPointLocations.size(), CV_32F);
 		//read_points(pointMap, pointCloud);
 
-		cv_draw_and_build_skeleton(&gen_root, camera_extrinsic, camera_intrinsic, &snhMap);
+		cv_draw_and_build_skeleton(&gen_root, cv::Mat::eye(4,4,CV_32F), camera_intrinsic, camera_extrinsic, &snhMap);
 
 		//integrate_volume(bpdv, snhMap, cylinderVector, depthMat, camera_extrinsic, camera_intrinsic, voxelSet, TSDF_array, weight_array, voxel_size);
 
 		std::vector<cv::Mat> bodypart_transforms(bpdv.size());
 		for (int i = 0; i < bpdv.size(); ++i){
-			bodypart_transforms[i] = get_bodypart_transform(bpdv[i], snhMap);
+			bodypart_transforms[i] = get_bodypart_transform(bpdv[i], snhMap, camera_extrinsic);
 		}
 
 		std::vector<Grid3D<char>> voxel_assignments = assign_voxels_to_body_parts(bpdv, bodypart_transforms, cylinderVector, depthMat, camera_extrinsic, camera_intrinsic, voxelSet, voxel_size);
@@ -268,7 +282,7 @@ int main(int argc, char * argv[]){
 		cv::Mat camera_extrinsic_inv = camera_extrinsic.inv();
 
 		for (int i = 0; i < bpdv.size(); ++i){
-			integrate_volume(bodypart_transforms[i], voxel_assignments[i], depthMat, camera_extrinsic, camera_extrinsic_inv, camera_intrinsic, camera_intrinsic_inv, voxelSet[i], TSDF_array[i], weight_array[i], voxel_size, voxel_size);
+			integrate_volume(bodypart_transforms[i], voxel_assignments[i], depthMat, camera_extrinsic, camera_extrinsic_inv, camera_intrinsic, camera_intrinsic_inv, voxelSet[i], TSDF_array[i], weight_array[i], voxel_size, voxel_size/10.f, -1);
 		}
 
 		cv::Mat volume_im(win_height, win_width, CV_8UC3, cv::Scalar(0, 0, 0));

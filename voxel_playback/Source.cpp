@@ -3,6 +3,8 @@
 #include <ReconsVoxel.h>
 #include <AssimpCV.h>
 
+#define GENERATE_FROM_REFERENCE 0
+
 SkeletonNodeHard generateFromReference(const SkeletonNodeHard * const ref, const SkeletonNodeHard * const prev){
 	SkeletonNodeHard snh;
 	cv::Mat generatedTransformation = skeleton_constraints_optimize(prev->mTransformation, ref->mTransformation, 1, 1);
@@ -41,6 +43,8 @@ int main(int argc, char * argv[]){
 
 	std::string voxel_recons_path(argv[2]);
 
+	cv::FileStorage fs;
+
 	std::vector<Cylinder> cylinders;
 	std::vector<VoxelMatrix> voxels;
 	std::vector<cv::Mat> TSDF_array;
@@ -52,7 +56,6 @@ int main(int argc, char * argv[]){
 	std::string video_directory(argv[1]);
 	int i = 0;
 	std::stringstream filenameSS;
-	cv::FileStorage fs;
 
 	filenameSS << video_directory << "/bodypartdefinitions.xml.gz";
 
@@ -94,7 +97,7 @@ int main(int argc, char * argv[]){
 		}
 
 		SkeletonNodeHard gen_root;
-		if (!firstframe){
+		if (!firstframe && GENERATE_FROM_REFERENCE){
 			gen_root = generateFromReference(&root, &prevRoot);
 		}
 		else{

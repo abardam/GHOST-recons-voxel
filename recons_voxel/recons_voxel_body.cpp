@@ -61,6 +61,57 @@ void init_voxel_set(
 	}
 }
 
+
+
+void init_voxel_set(
+	const BodyPartDefinitionVector& bpdv,
+	const SkeletonNodeAbsoluteVector& snav,
+	const std::vector<Cylinder>& fittedCylinders,
+	const cv::Mat& external_parameters,
+	std::vector<VoxelMatrix>& voxelSetVector,
+	const std::vector<VolumeDimensions>& volume_sizes,
+	VoxelSetMap& map,
+	float voxel_size){
+
+	for (int i = 0; i < bpdv.size(); ++i){
+
+		get_bodypart_transform(bpdv[i], snav, external_parameters);
+
+
+		if (volume_sizes[i].width <= 0 || volume_sizes[i].depth <= 0 || volume_sizes[i].height <= 0){
+			std::cout << "error! init_voxel_set: volume_sizes has a 0 width/height/depth!\n";
+			//int w = fittedCylinders[i].width * VOXEL_VOLUME_X_RATIO / voxel_size;
+			//int h = length / voxel_size;
+			//int d = fittedCylinders[i].height* VOXEL_VOLUME_Z_RATIO / voxel_size;
+			//
+			//if (w <= 0) w = 1;
+			//if (h <= 0) h = 1;
+			//if (d <= 0) d = 1;
+			//
+			//VoxelMatrix voxelSet_m(w, h, d, true);
+			//
+			//voxelSetVector.push_back(voxelSet_m);
+			//map.insert(VoxelSetEntry(bpdv[i].mBodyPartName, voxelSetVector.size() - 1));
+		}
+		{
+			int w = volume_sizes[i].width / voxel_size;
+			int h = volume_sizes[i].height / voxel_size;
+			int d = volume_sizes[i].depth / voxel_size;
+
+			if (w <= 0) w = 1;
+			if (h <= 0) h = 1;
+			if (d <= 0) d = 1;
+
+			VoxelMatrix voxelSet_m(w, h, d, true);
+
+			voxelSetVector.push_back(voxelSet_m);
+			VoxelSetEntry vse(bpdv[i].mBodyPartName, voxelSetVector.size() - 1);
+			map.insert(vse);
+
+		}
+	}
+}
+
 void delete_voxel_set(std::vector<VoxelSet *>& voxelSetVector){
 	for (int i = 0; i < voxelSetVector.size(); ++i){
 		delete voxelSetVector[i];
@@ -107,8 +158,9 @@ void voxel_draw_volume(cv::Mat& image,
 		if (vs_m->voxel_coords.empty()) return;
 
 		const cv::Mat voxel_transform = get_voxel_transform(vs->width, vs->height, vs->depth, voxel_size);
+		const cv::Mat transform = volume_transform * voxel_transform;
 
-		cv::Mat transformed = camera_matrix * volume_transform * voxel_transform * vs_m->voxel_coords;
+		cv::Mat transformed = camera_matrix * transform * vs_m->voxel_coords;
 
 		divide_pointmat_by_z(transformed);
 

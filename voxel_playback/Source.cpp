@@ -73,7 +73,7 @@ int main(int argc, char * argv[]){
 	fs.release();
 
 
-	cv::Mat depthMat, colorMat, camera_extrinsic, camera_intrinsic;
+	cv::Mat depthMat, colorMat, fullcolorMat, camera_extrinsic, camera_intrinsic;
 	SkeletonNodeHardMap snhMap;
 	VoxelSetMap vsMap;
 
@@ -91,8 +91,9 @@ int main(int argc, char * argv[]){
 		fs.open(filenameSS.str(), cv::FileStorage::READ);
 
 		double time;
+		int facing;
 
-		if (!load_input_frame(filenameSS.str(), time, camera_extrinsic, camera_intrinsic, root, colorMat, depthMat)) {
+		if (!load_input_frame(filenameSS.str(), time, camera_extrinsic, camera_intrinsic, root, colorMat, fullcolorMat, depthMat, facing)) {
 			break;
 		}
 
@@ -115,6 +116,7 @@ int main(int argc, char * argv[]){
 
 			cv::Vec3b color(bpdv[i].mColor[2] * 255, bpdv[i].mColor[1] * 255, bpdv[i].mColor[0] * 255);
 			voxel_draw_volume(colorMat, color, get_bodypart_transform(bpdv[i], snhMap, camera_extrinsic), camera_intrinsic, &voxels[i], voxel_size);
+			cv_draw_volume(cv::Scalar(color(0), color(1), color(2)), get_bodypart_transform(bpdv[i], snhMap, camera_extrinsic), voxels[i].height*voxel_size, voxels[i].width*voxel_size, voxels[i].depth*voxel_size, colorMat, camera_extrinsic, camera_intrinsic);
 		}
 		snhMap.clear();
 		cv::imshow("color", colorMat);

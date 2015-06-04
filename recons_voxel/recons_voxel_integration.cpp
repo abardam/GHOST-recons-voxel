@@ -403,8 +403,8 @@ void integrate_volume
 			//cv::imshow("debug", _debug_im);
 			//cv::waitKey(1);
 
-			float lambda = cv::norm(pt_screen);
-			float pt_based_depth = cv::norm(translation - pt) / lambda;
+			//float lambda = cv::norm(pt_screen);
+			//float pt_based_depth = cv::norm(translation - pt) / lambda;
 
 			float depth_val = depth.ptr<float>(y)[x];
 
@@ -412,15 +412,15 @@ void integrate_volume
 			cv::Mat repro_depth_pt = cv::Mat::diag(cv::Mat(cv::Vec4f(depth_val, depth_val, depth_val, 1))) * camera_matrix_inv * depth_pt;
 
 
-			float eta = (depth_multiplier) * (cv::norm(repro_depth_pt) - lambda); //depth multiplier is negative if depth is negative
+			float eta = (-1) * (depth_multiplier) * (cv::norm(repro_depth_pt) - cv::norm(pt_screen)); //depth multiplier is negative if depth is negative
 
 			if (depth_val == 0) eta = TSDF_MU+1; //handles "infinite" depth (i.e. in synthetic data)
 
 
 			float abs_eta = abs(eta);
 			if (abs_eta < TSDF_MU && pixel_assigned_to_body_part || abs_eta > TSDF_MU){
-				float tsdf = std::min(1.f, eta / TSDF_MU);
-				float weight = 1;
+				float tsdf = SIGNUM(eta) * std::min(1.f, abs_eta / TSDF_MU); //try signum
+				float weight = eta < -TSDF_MU? 0.5:1;
 
 				if (TSDF.ptr<float>()[j] == TSDF_MAX ||
 					TSDF.ptr<float>()[j] == TSDF_MIN){

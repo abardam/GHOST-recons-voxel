@@ -2,6 +2,16 @@
 #include <cv_draw_common.h>
 #include <cv_pointmat_common.h>
 
+cv::Vec4f vertex_(const cv::Mat& transform, const cv::Vec4f& local_vertex){
+	//first make a translation matrix out of the vertex
+	cv::Mat translation = cv::Mat::eye(4, 4, CV_32F);
+	translation.ptr<float>(0)[3] = local_vertex(0);
+	translation.ptr<float>(1)[3] = local_vertex(1);
+	translation.ptr<float>(2)[3] = local_vertex(2);
+
+	//next transform
+	return get_origin(transform * translation);
+}
 
 cv::Mat get_voxel_transform(float width, float height, float depth, float voxel_size){
 	cv::Mat voxel_transform = cv::Mat::eye(4, 4, CV_32F);
@@ -142,7 +152,7 @@ void voxel_draw_volume(cv::Mat& image,
 
 					if (vs_a->voxels[x][y][z].exists){
 						cv::circle(image,
-							project2D(vertex(volume_transform,
+							project2D(vertex_(volume_transform,
 							cv::Vec4f(
 							(x - vs->width / 2)*voxel_size,
 							(y - vs->height / 2)*voxel_size,

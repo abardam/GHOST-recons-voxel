@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AssimpOpenGL.h>
+#include <cv_skeleton.h>
 #include "recons_voxel.h"
 
 //synthetic data

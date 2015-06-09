@@ -1,6 +1,5 @@
 #pragma once
 #include <opencv2\opencv.hpp>
-#include <AssimpOpenGL.h>
 
 #include "recons_voxel.h"
 #include "recons_cylinder.h"

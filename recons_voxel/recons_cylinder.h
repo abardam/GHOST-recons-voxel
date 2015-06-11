@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cv_skeleton.h>
 #include "recons_voxel.h"
 
 //synthetic data

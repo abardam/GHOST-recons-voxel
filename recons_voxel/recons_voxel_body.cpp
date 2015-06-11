@@ -1,14 +1,17 @@
 #include "recons_voxel_body.h"
 #include <cv_draw_common.h>
 #include <cv_pointmat_common.h>
-#include <cv_skeleton.h>
+#include "recons_cylinder.h"
 
 cv::Vec4f vertex_(const cv::Mat& transform, const cv::Vec4f& local_vertex){
+	//first make a translation matrix out of the vertex
 	cv::Mat translation = cv::Mat::eye(4, 4, CV_32F);
 	translation.ptr<float>(0)[3] = local_vertex(0);
 	translation.ptr<float>(1)[3] = local_vertex(1);
 	translation.ptr<float>(2)[3] = local_vertex(2);
-	return get_origin(transform*translation);
+
+	//next transform
+	return get_origin(transform * translation);
 }
 
 cv::Mat get_voxel_transform(float width, float height, float depth, float voxel_size){

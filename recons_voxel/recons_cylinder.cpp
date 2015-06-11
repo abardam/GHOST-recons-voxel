@@ -1,5 +1,5 @@
 #include "recons_cylinder.h"
-#include <cv_draw_common.h>s
+#include <cv_draw_common.h>
 #include <cv_pointmat_common.h>
 
 float dist_radius(const cv::Vec4f& point, const RadiusSettings& radius){
@@ -9,7 +9,7 @@ float dist_radius(const cv::Vec4f& point, const RadiusSettings& radius){
 	float dist_to_ellipse_sq = x_t * x_t + z_t * z_t;
 	float dist_to_pt_sq = point(0)*point(0) + point(2)*point(2);
 
-	return abs(dist_to_ellipse_sq - dist_to_pt_sq);
+	return fabs(dist_to_ellipse_sq - dist_to_pt_sq);
 }
 
 bool filter_height_criteria(const cv::Vec4f& point, void* float_length){

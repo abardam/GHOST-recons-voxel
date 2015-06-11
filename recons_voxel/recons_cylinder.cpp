@@ -1,6 +1,5 @@
 #include "recons_cylinder.h"
-#include <cv_draw_common.h>
-#include <AssimpOpenGL.h>
+#include <cv_draw_common.h>s
 #include <cv_pointmat_common.h>
 
 float dist_radius(const cv::Vec4f& point, const RadiusSettings& radius){
@@ -103,7 +102,7 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHa
 							}
 						}
 
-
+#ifdef DEBUG_STUFF
 						//debug
 						if (!pc_bpcs_fit.empty() && debug){
 							cv::Mat test = test_.clone();
@@ -119,6 +118,7 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHa
 							cv::imshow("test", test);
 							cv::waitKey(5);
 						}
+#endif
 
 						//keep limbs circular
 						if (
@@ -134,14 +134,12 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeHa
 					}
 
 				}
-
+#ifdef DEBUG_STUFF
 				if (debug){
 					cv::Scalar color(bpdv[i].mColor[2] * 255, bpdv[i].mColor[1] * 255, bpdv[i].mColor[0] * 255);
 					cv_draw_volume(color, bp_transform, length, bestrad_x * 2, bestrad_z * 2, test_, camera_pose, *DEBUG_camera_matrix);
-
-
 				}
-
+#endif
 				cylinderVector[i].width = bestrad_x;
 				cylinderVector[i].height = bestrad_z;
 			}
@@ -229,7 +227,7 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeAb
 							}
 						}
 
-
+#ifdef DEBUG_STUFF
 						//debug
 						if (!pc_bpcs_fit.empty() && debug){
 							cv::Mat test = test_.clone();
@@ -245,7 +243,7 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeAb
 							cv::imshow("test", test);
 							cv::waitKey(5);
 						}
-
+#endif
 						//keep limbs circular
 						if (
 							bpdv[i].mBodyPartName != "HEAD" &&
@@ -261,13 +259,13 @@ void cylinder_fitting(const BodyPartDefinitionVector& bpdv, const SkeletonNodeAb
 
 				}
 
+#ifdef DEBUG_STUFF
 				if (debug){
 					cv::Scalar color(bpdv[i].mColor[2] * 255, bpdv[i].mColor[1] * 255, bpdv[i].mColor[0] * 255);
 					cv_draw_volume(color, bp_transform, length, bestrad_x * 2, bestrad_z * 2, test_, camera_pose, *DEBUG_camera_matrix);
 
-
 				}
-
+#endif
 				cylinderVector[i].width = bestrad_x;
 				cylinderVector[i].height = bestrad_z;
 			}

@@ -47,11 +47,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>G:\code\ReconsVoxel-x86-vs12\lib</OutDir>
+    <OutDir>$(CODE_DIR)\ReconsVoxel-x86-vs12\lib</OutDir>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>G:\code\ReconsVoxel-x86-vs12\lib</OutDir>
+    <OutDir>$(CODE_DIR)\ReconsVoxel-x86-vs12\lib</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

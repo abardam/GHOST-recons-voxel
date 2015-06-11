@@ -1,6 +1,7 @@
 #pragma once
 
 #include <opencv2\opencv.hpp>
+#include <cv_skeleton.h>
 
 //#define VOXEL_SIZE 0.1
 #define VOXEL_VOLUME_WIDTH 3.5

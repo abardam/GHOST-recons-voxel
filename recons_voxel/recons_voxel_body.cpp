@@ -1,6 +1,7 @@
 #include "recons_voxel_body.h"
 #include <cv_draw_common.h>
 #include <cv_pointmat_common.h>
+#include "recons_cylinder.h"
 
 cv::Vec4f vertex_(const cv::Mat& transform, const cv::Vec4f& local_vertex){
 	//first make a translation matrix out of the vertex

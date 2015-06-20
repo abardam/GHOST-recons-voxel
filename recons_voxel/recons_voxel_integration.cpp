@@ -201,6 +201,8 @@ float TSDF_MU){
 				//}
 
 				bool pixel_assigned_to_body_part = voxel_assignments[i][v_x][v_y][v_z] == 2;
+				pixel_assigned_to_body_part = true;
+
 
 				cv::Mat pt = global_pts(cv::Range(0, 4), cv::Range(j, j + 1));
 				cv::Mat pt_screen = pts_screen(cv::Range(0, 4), cv::Range(j, j + 1));
@@ -351,7 +353,8 @@ void integrate_volume
 	cv::Mat& TSDF_weight,
 	float voxel_size,
 	float TSDF_MU,
-	int depth_multiplier){
+	int depth_multiplier,
+	const cv::Mat& optional_bg_mask){
 
 
 	cv::Mat translation = camera_pose(cv::Range(0, 4), cv::Range(3, 4));
@@ -384,7 +387,6 @@ void integrate_volume
 			int v_y = vs_m->voxel_coords.ptr<float>(1)[j];
 			int v_z = vs_m->voxel_coords.ptr<float>(2)[j];
 
-			bool pixel_assigned_to_body_part = voxel_assignment[v_x][v_y][v_z] == 2;
 
 			cv::Mat pt = global_pts(cv::Range(0, 4), cv::Range(j, j + 1));
 			cv::Mat pt_screen = pts_screen(cv::Range(0, 4), cv::Range(j, j + 1));
@@ -397,6 +399,7 @@ void integrate_volume
 			if (!CLAMP(x, y, depth.cols, depth.rows)){
 				continue;
 			}
+
 
 			//cv::Mat _debug_im = debug_im.clone();
 			//_debug_im.ptr<cv::Vec3b>(y)[x] = cv::Vec3b(0, 255, 0);
@@ -412,13 +415,19 @@ void integrate_volume
 			cv::Mat repro_depth_pt = cv::Mat::diag(cv::Mat(cv::Vec4f(depth_val, depth_val, depth_val, 1))) * camera_matrix_inv * depth_pt;
 
 
-			float eta = (-1) * (depth_multiplier) * (cv::norm(repro_depth_pt) - cv::norm(pt_screen)); //depth multiplier is negative if depth is negative
+			float eta = cv::norm(repro_depth_pt) - cv::norm(pt_screen);
 
-			if (depth_val == 0) eta = TSDF_MU+1; //handles "infinite" depth (i.e. in synthetic data)
+			if (depth_val == 0) eta = TSDF_MU; //handles "infinite" depth (i.e. in synthetic data)
 
+			bool pixel_assigned_to_body_part = voxel_assignment[v_x][v_y][v_z] == 2;
+			if (!optional_bg_mask.empty()){
+				if (optional_bg_mask.ptr<unsigned char>(y)[x] == 0){
+					pixel_assigned_to_body_part = false;
+				}
+			}
 
 			float abs_eta = abs(eta);
-			if (eta > -TSDF_MU && !pixel_assigned_to_body_part || eta < -TSDF_MU && pixel_assigned_to_body_part){
+			if (eta > -TSDF_MU || abs_eta < TSDF_MU && pixel_assigned_to_body_part){
 				float tsdf = SIGNUM(eta) * std::min(1.f, abs_eta / TSDF_MU); //try signum
 				//float weight = eta < -TSDF_MU? 0.05:1;
 				float weight = 1;

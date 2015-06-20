@@ -19,7 +19,8 @@ void integrate_volume(
 	cv::Mat& TSDF_weight,
 	float voxel_size,
 	float TSDF_MU,
-	int depth_multiplier);
+	int depth_multiplier,
+	const cv::Mat& optional_bg_mask = cv::Mat());
 
 //if voxelAssignments[i][x][y][z] is 1, the voxel in body part volume i coord x,y,z belongs to i;
 //if 2, it belongs to another part;
